@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">RemoteSMS</string>
+
+    <string name="server_update">更新规则</string>
+    <string name="server_start">启动服务</string>
+    <string name="server_stop">停止服务</string>
+
+    <string name="token">根据联系人号码过滤</string>
+    <string name="api_port">根据短信内容过滤</string>
+
+</resources>
