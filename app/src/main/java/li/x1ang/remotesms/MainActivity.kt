@@ -11,6 +11,7 @@ import android.support.design.widget.TextInputEditText
 
 import li.x1ang.remotesms.service.SMSService
 
+private const val REQUEST_CODE_ASK_PERMISSIONS = 123
 
 class MainActivity : AppCompatActivity() {
 
@@ -60,8 +61,7 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.SEND_SMS,
                 Manifest.permission.READ_CONTACTS
                 )
-        val requestCode = 123
-        ActivityCompat.requestPermissions(this, permissions, requestCode)
+        ActivityCompat.requestPermissions(this, permissions, REQUEST_CODE_ASK_PERMISSIONS)
     }
 
     private fun startServices() {
