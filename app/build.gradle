@@ -9,7 +9,7 @@ android {
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "li.x1ang.remotesms"
-        minSdkVersion 23
+        minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
