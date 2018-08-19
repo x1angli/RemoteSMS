@@ -2,18 +2,20 @@ package li.x1ang.remotesms
 
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Bundle
+import android.support.design.widget.TextInputEditText
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
 import android.widget.Button
-import android.support.design.widget.TextInputEditText
-
+import android.widget.TextView
 import li.x1ang.remotesms.service.SMSService
 
 private const val REQUEST_CODE_ASK_PERMISSIONS = 123
 
 class MainActivity : AppCompatActivity() {
+    lateinit var tvInfo: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(findViewById(R.id.appbar))
 
+        tvInfo = findViewById(R.id.tv_info)
         val serverButton = findViewById<Button>(R.id.button_server_toggle)
         val serverUpdate = findViewById<Button>(R.id.button_update)
         val inputPhone = findViewById<TextInputEditText>(R.id.input_phone)
@@ -29,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         serverUpdate.setOnClickListener {
             App.inputPhone = inputPhone.text.toString()
             App.inputContent = inputContent.text.toString()
+            refreshInfo(SMSService.isRunning)
         }
 
         /**点击事件处理*/
@@ -36,14 +40,24 @@ class MainActivity : AppCompatActivity() {
             if (SMSService.isRunning) {
                 stopServices()
                 serverButton.text = getText(R.string.server_start)
+                refreshInfo(false)
             } else {
                 App.inputPhone = inputPhone.text.toString()
                 App.inputContent = inputContent.text.toString()
                 startServices()
                 serverButton.text = getText(R.string.server_stop)
+                refreshInfo(true)
             }
         }
 
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun refreshInfo(running: Boolean) {
+        if(!isFinishing){
+            val info = "服务状态：$running \n号码过滤：${App.inputPhone} \n内容过滤: ${App.inputContent}"
+            tvInfo.text = info
+        }
     }
 
     override fun onStart() {

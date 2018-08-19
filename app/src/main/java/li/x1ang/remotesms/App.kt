@@ -10,6 +10,8 @@ class App : Application() {
         lateinit var context: Context
         var inputPhone = ""
         var inputContent = ""
+        var msgReceived = 0
+        var msgSend = 0
     }
 
     override fun onCreate() {
