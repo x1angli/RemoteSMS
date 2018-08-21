@@ -6,6 +6,8 @@ import android.content.IntentFilter
 import android.os.IBinder
 
 import li.x1ang.remotesms.receiver.SMSReceiver
+import li.x1ang.remotesms.utils.log
+import li.x1ang.remotesms.utils.notify
 
 /**
  * 短信监听服务，开启后会自动重启
@@ -30,6 +32,8 @@ class SMSService : Service() {
         registerReceiver(smsReceiver, intentFilter)
 
         isRunning = true
+        log("SMSService  onCreate")
+        notify(this)
     }
 
     override fun onDestroy() {
@@ -40,9 +44,12 @@ class SMSService : Service() {
 
         val intent = Intent("li.x1ang.sms.permanent")
         sendBroadcast(intent)
+        log("SMSService  onDestroy")
+        notify(this)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        log("SMSService  onStartCommandc")
         return START_STICKY
     }
 }

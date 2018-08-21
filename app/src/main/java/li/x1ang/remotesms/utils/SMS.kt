@@ -7,10 +7,7 @@ import java.util.*
 import kotlin.concurrent.thread
 
 import android.annotation.SuppressLint
-import android.content.ContentResolver
 import android.content.Context
-import android.net.Uri
-import android.provider.ContactsContract.PhoneLookup
 import android.telephony.SmsMessage
 import android.telephony.TelephonyManager
 
@@ -36,9 +33,10 @@ import li.x1ang.remotesms.PhoneMessage
 
 
 
-class SmsHelper () {
+class SmsHelper(context: Context?) {
     private val DATE_FORMAT = SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss", Locale.CHINA)
 
+    var context = context
     var receiver_id = "123*3570"
 
     init {
@@ -59,13 +57,16 @@ class SmsHelper () {
             if (response.statusLine.statusCode == HttpStatus.SC_OK) {
                 val result = EntityUtils.toString(response.entity, "utf-8")
                 log("sendMsg = $result")
+                App.msgSend++
             }
+
+            notify(context!!)
         }
     }
 
     @SuppressLint("MissingPermission", "HardwareIds")
     fun getLocalPhoneNumber(): String {
-        val tm = App.context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        val tm = context?.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         return tm.line1Number
     }
 
