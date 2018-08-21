@@ -7,12 +7,10 @@ import java.util.*
 import kotlin.concurrent.thread
 
 import android.annotation.SuppressLint
-import android.content.ContentResolver
 import android.content.Context
-import android.net.Uri
-import android.provider.ContactsContract.PhoneLookup
 import android.telephony.SmsMessage
 import android.telephony.TelephonyManager
+import android.util.Log
 
 import cz.msebera.android.httpclient.HttpStatus
 import cz.msebera.android.httpclient.client.methods.HttpPost
@@ -22,8 +20,9 @@ import cz.msebera.android.httpclient.util.EntityUtils
 
 
 import li.x1ang.remotesms.App
-import li.x1ang.remotesms.DINGTALK_ENDPOINT
+import li.x1ang.remotesms.BuildConfig
 import li.x1ang.remotesms.PhoneMessage
+import kotlin.properties.Delegates
 
 /**
  * 短信工具类
@@ -36,20 +35,24 @@ import li.x1ang.remotesms.PhoneMessage
 
 
 
-class SmsHelper () {
+class SmsHelper(context: Context?) {
     private val DATE_FORMAT = SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss", Locale.CHINA)
 
-    var receiver_id = "123*3570"
+
+    private var context: Context?
+    private var receiverId: String?
 
     init {
+        this.context = context
     //获取本机手机号码,由于系统限制，并非所有手机都能获取到
-        receiver_id = getLocalPhoneNumber()
+        //receiver_id = getLocalPhoneNumber()
+        this.receiverId = BuildConfig.RECEIVER_ID
     }
 
     fun sendMsg(msg: String) {
         thread {
             val httpclient = HttpClients.createDefault()
-            val httpPost = HttpPost(DINGTALK_ENDPOINT)
+            val httpPost = HttpPost(BuildConfig.WEBHOOK_ENDPOINT)
             httpPost.addHeader("Content-Type", "application/json; charset=utf-8")
 
             val se = StringEntity(msg, "utf-8")
@@ -58,14 +61,17 @@ class SmsHelper () {
             val response = httpclient.execute(httpPost)
             if (response.statusLine.statusCode == HttpStatus.SC_OK) {
                 val result = EntityUtils.toString(response.entity, "utf-8")
-                log("sendMsg = $result")
+                Log.i("SmsHelper", "sendMsg = $result")
+                App.msgSend++
             }
+
+            notify(context!!)
         }
     }
 
     @SuppressLint("MissingPermission", "HardwareIds")
     fun getLocalPhoneNumber(): String {
-        val tm = App.context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        val tm = context?.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         return tm.line1Number
     }
 
@@ -76,7 +82,7 @@ class SmsHelper () {
                 "msgtype" : "markdown",
                 "markdown" :
                     {
-                        "title" : "转发自: $receiver_id",
+                        "title" : "转发自: $receiverId",
                         "text"  : "#### 时间: ${DATE_FORMAT.format(timestamp)}\n
                                    #### 来自: $sender_id\n
                                    #### 正文: \n

@@ -3,6 +3,7 @@ package li.x1ang.remotesms.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.telephony.SmsMessage
 import android.util.Log
 
@@ -14,6 +15,7 @@ import li.x1ang.remotesms.PhoneMessage
 import li.x1ang.remotesms.service.SMSService
 import li.x1ang.remotesms.utils.*
 
+@Suppress("DEPRECATION")
 /**
  * 短信接收处理
  */
@@ -25,17 +27,22 @@ class SMSReceiver : BroadcastReceiver() {
             val pdus = bundle?.get("pdus") as? Array<*>
 
             if (null != pdus && !pdus.isEmpty()) {
+                App.msgReceived++
                 val messages = pdus.map {
-                    SmsMessage.createFromPdu(it as? ByteArray, bundle.getString("format"))
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        SmsMessage.createFromPdu(it as? ByteArray, bundle.getString("format"))
+                    } else {
+                        SmsMessage.createFromPdu(it as ByteArray)
+                    }
                 }
-                onSmsReceived(messages)
+                onSmsReceived(context, messages)
             }
         }
     }
 
-    private fun onSmsReceived(messages: List<SmsMessage>) {
+    private fun onSmsReceived(context: Context?, messages: List<SmsMessage>) {
         Log.d("SMSReceiver","onReceive list $messages.size")
-        val smsHelper = SmsHelper()
+        val smsHelper = SmsHelper(context)
         val msgBody = smsHelper.getMsgBody(messages)
         Log.d("SMSReceiver", "onReceive message $msgBody")
 
