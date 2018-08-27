@@ -4,9 +4,9 @@ import android.app.Service
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.IBinder
+import android.util.Log
 
 import li.x1ang.remotesms.receiver.SMSReceiver
-import li.x1ang.remotesms.utils.log
 import li.x1ang.remotesms.utils.notify
 
 /**
@@ -32,7 +32,7 @@ class SMSService : Service() {
         registerReceiver(smsReceiver, intentFilter)
 
         isRunning = true
-        log("SMSService  onCreate")
+        Log.i("SMSService", "onCreate")
         notify(this)
     }
 
@@ -44,12 +44,12 @@ class SMSService : Service() {
 
         val intent = Intent("li.x1ang.sms.permanent")
         sendBroadcast(intent)
-        log("SMSService  onDestroy")
+        Log.i("SMSService", "onDestroy")
         notify(this)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        log("SMSService  onStartCommandc")
+        Log.i("SMSService", "onStartCommandc")
         return START_STICKY
     }
 }

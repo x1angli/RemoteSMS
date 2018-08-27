@@ -22,7 +22,6 @@ import cz.msebera.android.httpclient.util.EntityUtils
 import li.x1ang.remotesms.App
 import li.x1ang.remotesms.BuildConfig
 import li.x1ang.remotesms.PhoneMessage
-import kotlin.properties.Delegates
 
 /**
  * 短信工具类
@@ -39,14 +38,13 @@ class SmsHelper(context: Context?) {
     private val DATE_FORMAT = SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss", Locale.CHINA)
 
 
-    private var context: Context?
-    private var receiverId: String?
+    private var context = context
+    private var receiverId = BuildConfig.RECEIVER_ID
 
     init {
-        this.context = context
-    //获取本机手机号码,由于系统限制，并非所有手机都能获取到
-        //receiver_id = getLocalPhoneNumber()
-        this.receiverId = BuildConfig.RECEIVER_ID
+        //获取本机手机号码,由于系统限制，并非所有手机都能获取到
+        receiverId = getLocalPhoneNumber()
+
     }
 
     fun sendMsg(msg: String) {
@@ -78,17 +76,15 @@ class SmsHelper(context: Context?) {
     fun genMsgMarkdown(phoneMessage: PhoneMessage): String {
         var toReturn = ""
         with(phoneMessage) {
-            toReturn = """{
-                "msgtype" : "markdown",
-                "markdown" :
-                    {
+            toReturn = """
+                {
+                    "msgtype" : "markdown",
+                    "markdown" : {
                         "title" : "转发自: $receiverId",
-                        "text"  : "#### 时间: ${DATE_FORMAT.format(timestamp)}\n
-                                   #### 来自: $sender_id\n
-                                   #### 正文: \n
-                                   > $content "
+                        "text" : "#### 时间: ${DATE_FORMAT.format(timestamp)}\n #### 来自: $senderId\n #### 终端: $receiverId\n #### 正文: \n > $content "
                     }
-            }""".trimIndent()
+                }
+            """.trimIndent()
         }
         return toReturn
     }

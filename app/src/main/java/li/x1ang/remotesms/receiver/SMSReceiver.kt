@@ -65,9 +65,9 @@ class SMSReceiver : BroadcastReceiver() {
             if (isNoFilter || isSenderIDFilter || isContentFilter) {
                 val msgMarkDown = smsHelper.genMsgMarkdown(phoneMessage)
                 smsHelper.sendMsg(msgMarkDown)
-                log("转发内容:\n $msgMarkDown)}")
+                Log.i("SMSReceiver", "转发内容:\n $msgMarkDown)}")
             } else {
-                log("不符合转发规则 $phoneFilter | $contentFilter")
+                Log.i("SMSReceiver","不符合转发规则 $phoneFilter | $contentFilter")
             }
         }
     }
