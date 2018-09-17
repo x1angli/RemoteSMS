@@ -56,13 +56,7 @@ class SMSReceiver : BroadcastReceiver() {
             val phoneFilter = App.inputPhone
             val contentFilter = App.inputContent
 
-            val isNoFilter = TextUtils.isEmpty(phoneFilter) && TextUtils.isEmpty(contentFilter)
-            val isSenderIDFilter = !TextUtils.isEmpty(phoneFilter) && sender_id.contains(phoneFilter, true)
-            val isContentFilter = !TextUtils.isEmpty(contentFilter) && msgBody.contains(contentFilter, true)
-
-            Log.d("SMSReceiver","转发规则 $isNoFilter | $isSenderIDFilter | $isContentFilter")
-
-            if (isNoFilter || isSenderIDFilter || isContentFilter) {
+            if (App.shouldForwardMessage(sender_id, msgBody)) {
                 val msgMarkDown = smsHelper.genMsgMarkdown(phoneMessage)
                 smsHelper.sendMsg(msgMarkDown)
                 Log.i("SMSReceiver", "转发内容:\n $msgMarkDown)}")
