@@ -90,12 +90,8 @@ class SmsHelper(context: Context?) {
     }
 
     fun getMsgBody(messages: List<SmsMessage>): String {
-        val messageBody = StringBuilder()
 
-        messages.map {
-            messageBody.append(it.messageBody)
-        }
-        return messageBody.toString()
+        return messages.fold("") { body, msg -> body + msg.messageBody}
     }
 
 
