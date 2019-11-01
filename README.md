@@ -4,6 +4,7 @@ A small tool that allow you to remotely receive (or send, in the future) SMS on 
 
 ## Before compiling
 First, you MUST edit the `app/src/main/assets/config.yaml` file before compiling or running. In particular ,the `endpoint` should be specified correctly
+
     ```
     webhook:
       ...
