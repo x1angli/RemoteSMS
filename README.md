@@ -3,10 +3,10 @@ A small tool that allow you to remotely receive (or send, in the future) SMS on 
 
 
 ## Before compiling
-First, you need to create a `extra.properties` file located under the project base, such file is ignored by Git.
-It should look like:
+First, you MUST edit the `app/src/main/assets/config.yaml` file before compiling or running. In particular ,the `endpoint` should be specified correctly
 
-   ```
-        webhook.endpoint=https://oapi.dingtalk.com/robot/send?access_token=.....
-        receiver.id=13012345678
-   ```
+    ```
+    webhook:
+      ...
+      endpoint: https://oapi.dingtalk.com/robot/send?access_token=YOUR_TOKEN
+    ```
