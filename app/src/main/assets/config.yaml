@@ -1,0 +1,10 @@
+webhook:
+  type: dingtalk
+  endpoint: https://oapi.dingtalk.com/robot/send?access_token=YOUR_TOKEN
+
+simcards:
+  by_slotid:
+    1: 1234500001
+    2: 1234500002
+  by_iccid:
+    89014104279832353182: 1234500003

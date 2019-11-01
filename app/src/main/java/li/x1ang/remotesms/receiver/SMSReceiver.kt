@@ -1,68 +1,92 @@
 package li.x1ang.remotesms.receiver
 
+import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
+import android.content.pm.PackageManager
+import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.telephony.SmsMessage
+import android.telephony.SubscriptionManager
+import android.text.TextUtils
 import android.util.Log
-
-import cz.msebera.android.httpclient.util.TextUtils
-
 import li.x1ang.remotesms.App
 import li.x1ang.remotesms.PhoneMessage
-
 import li.x1ang.remotesms.service.SMSService
-import li.x1ang.remotesms.utils.*
+import li.x1ang.remotesms.utils.SmsHelper
+import li.x1ang.remotesms.utils.notify
 
-@Suppress("DEPRECATION")
 /**
  * 短信接收处理
  */
-class SMSReceiver : BroadcastReceiver() {
+class SMSReceiver(context: Context) : BroadcastReceiver() {
+    //    @SuppressLint("MissingPermission", "HardwareIds")
+//    fun getLocalPhoneNumber(): String {
+//        val tm = context?.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+//        return tm.line1NumberonCreate
+//    }
+    val smsHelper = SmsHelper(context)
 
-    override fun onReceive(context: Context?, intent: Intent?) {
-        if (intent?.action?.equals(SMSService.ACTION_SMS_RECEIVED) == true) {
+    private fun getReceiverNum(context: Context, bundle: Bundle): String? {
+
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) ==
+                PackageManager.PERMISSION_GRANTED) {
+            val manager = context.getSystemService(SubscriptionManager::class.java)
+
+            val slotIdx = bundle.getInt("slot")
+
+            manager.getActiveSubscriptionInfoForSimSlotIndex(slotIdx)?.let {
+                if (it.number?.length ?: 0 > 0)
+                    return it.number
+                val numByIccId = smsHelper.getPhoneNumByIccId(it.iccId)
+                if (!TextUtils.isEmpty(numByIccId))
+                    return numByIccId
+            }
+            return smsHelper.getPhoneNumBySlotId(slotIdx.toString())
+        }
+        return null
+    }
+
+    override fun onReceive(context: Context, intent: Intent) {
+        if (intent.action == SMSService.ACTION_SMS_RECEIVED) {
             val bundle = intent.extras
-            val pdus = bundle?.get("pdus") as? Array<*>
 
-            if (null != pdus && !pdus.isEmpty()) {
+            bundle?.let {
+                val receiverNum = getReceiverNum(context, it)
+
+                val pdus = it.get("pdus") as Array<*>
+
                 App.msgReceived++
                 val messages = pdus.map {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        SmsMessage.createFromPdu(it as? ByteArray, bundle.getString("format"))
-                    } else {
-                        SmsMessage.createFromPdu(it as ByteArray)
-                    }
+                    SmsMessage.createFromPdu(it as? ByteArray, bundle.getString("format"))
                 }
-                onSmsReceived(context, messages)
+                onSmsReceived(context, messages, receiverNum)
             }
         }
     }
 
-    private fun onSmsReceived(context: Context?, messages: List<SmsMessage>) {
+    private fun onSmsReceived(context: Context, messages: List<SmsMessage>, receiverNum: String?) {
         Log.d("SMSReceiver","onReceive list $messages.size")
-        val smsHelper = SmsHelper(context)
+
         val msgBody = smsHelper.getMsgBody(messages)
         Log.d("SMSReceiver", "onReceive message $msgBody")
 
         val message = messages[0]
-        message.let {
-            val sender_id = it.displayOriginatingAddress ?: ""
-//            val contact = getContactName(context?.contentResolver, it.displayOriginatingAddress) ?: ""
-            val timestamp = it.timestampMillis
-            val phoneMessage = PhoneMessage(timestamp, sender_id, msgBody)
 
-            val phoneFilter = App.inputPhone
-            val contentFilter = App.inputContent
+        val senderNum = message.displayOriginatingAddress ?: ""
+        // val contact = getContactName(context?.contentResolver, it.displayOriginatingAddress) ?: ""
+        val phoneMessage = PhoneMessage(message.timestampMillis, senderNum, receiverNum, msgBody)
 
-            if (App.shouldForwardMessage(sender_id, msgBody)) {
-                val msgMarkDown = smsHelper.genMsgMarkdown(phoneMessage)
-                smsHelper.sendMsg(msgMarkDown)
-                Log.i("SMSReceiver", "转发内容:\n $msgMarkDown)}")
-            } else {
-                Log.i("SMSReceiver","不符合转发规则 $phoneFilter | $contentFilter")
-            }
+        if (smsHelper.shouldForwardMessage(senderNum, msgBody)) {
+            val msgMarkDown = smsHelper.genMsgMarkdown(phoneMessage)
+            smsHelper.postWebhook(msgMarkDown)
+            Log.i("SMSReceiver", "Forwarded Message:\n $msgMarkDown)}")
+            notify(context)
+        } else {
+            Log.i("SMSReceiver", "Canceled Message:\n $msgBody)}")
         }
     }
+
+
 }

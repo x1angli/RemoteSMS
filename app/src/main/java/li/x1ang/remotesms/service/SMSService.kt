@@ -13,10 +13,11 @@ import li.x1ang.remotesms.utils.notify
  * 短信监听服务，开启后会自动重启
  */
 class SMSService : Service() {
-    private val smsReceiver = SMSReceiver()
-
+    private val smsReceiver by lazy {
+        SMSReceiver(applicationContext)
+    }
     companion object {
-        val ACTION_SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED"
+        const val ACTION_SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED"
         var isRunning = false
     }
 
