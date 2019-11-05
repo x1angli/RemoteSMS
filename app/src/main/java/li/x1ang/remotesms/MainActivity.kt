@@ -8,10 +8,13 @@ import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
 import li.x1ang.remotesms.service.SMSService
 import android.view.View
+
 import li.x1ang.remotesms.utils.hideKeyboard
 
 
@@ -66,12 +69,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+
+        menuInflater.inflate(R.menu.main_ctx_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
     @SuppressLint("SetTextI18n")
     private fun refreshInfo(running: Boolean) {
         if(!isFinishing){
             val info = "服务状态：$running \n号码过滤：${App.inputPhone} \n内容过滤: ${App.inputContent}"
             tvInfo.text = info
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if(item != null && item!!.itemId == R.id.ctx_settings){
+            //show remotesms settings
+            startActivity(Intent(this, SMSPreferenceActivity::class.java))
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onStart() {

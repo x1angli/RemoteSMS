@@ -1,6 +1,7 @@
 package li.x1ang.remotesms.utils
 
 import android.content.Context
+import android.support.v7.preference.PreferenceManager
 import android.telephony.SmsMessage
 import android.text.TextUtils
 import android.util.Log
@@ -22,6 +23,8 @@ class SmsHelper(context: Context) {
     private var config: Map<String, Map<String, Any>>
 
     private var webhook_endpoint: String
+
+    private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     init {
         //val yamlConfigText = this.javaClass::class.java.getResource("config.yaml")?.readText() ?: ""
@@ -45,9 +48,15 @@ class SmsHelper(context: Context) {
         return iccid_val ?: ""
     }
 
+    fun getPreferredNumberBySlotId(slotid: String): String {
+        val preferredNumber = sharedPreferences.getString("sim${slotid}num", "")
+        return preferredNumber
+    }
+
     fun getPhoneNumBySlotId(slotid: String): String {
         if (TextUtils.isEmpty(slotid))
             return ""
+
         val slotid_map = config.get("simcards")?.get("by_slotid") as Map<String, String>
         val slotid_val = slotid_map.get(slotid)
         return slotid_val ?: ""

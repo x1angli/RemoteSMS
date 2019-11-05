@@ -36,6 +36,9 @@ class SMSReceiver(context: Context) : BroadcastReceiver() {
 
             val slotIdx = bundle.getInt("slot")
 
+            val preferredNumber = smsHelper.getPreferredNumberBySlotId("${slotIdx}")
+            if(!TextUtils.isEmpty(preferredNumber))return preferredNumber
+
             manager.getActiveSubscriptionInfoForSimSlotIndex(slotIdx)?.let {
                 if (it.number?.length ?: 0 > 0)
                     return it.number
