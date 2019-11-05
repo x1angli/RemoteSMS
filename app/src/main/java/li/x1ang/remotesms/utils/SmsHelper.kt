@@ -71,7 +71,13 @@ class SmsHelper(context: Context) {
             "dingtalk" -> {
                 thread {
                     val httpclient = HttpClients.createDefault()
-                    val httpPost = HttpPost(webhook_endpoint)
+
+                    var endpoint = sharedPreferences.getString("dingtalk_endpoint", webhook_endpoint)
+                    if(TextUtils.isEmpty(endpoint)){
+                        endpoint = webhook_endpoint
+                    }
+
+                    val httpPost = HttpPost(endpoint)
                     httpPost.addHeader("Content-Type", "application/json; charset=utf-8")
 
                     val se = StringEntity(msg, "utf-8")
