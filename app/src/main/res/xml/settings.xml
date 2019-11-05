@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference app:key="dingtalk_endpoint"
+                        app:title="@string/dingtalk_endpoint"/>
+    <EditTextPreference app:key="sim0num"
+                        app:title="@string/sim0num"/>
+    <EditTextPreference app:key="sim1num"
+                        app:title="@string/sim1num"/>
+</PreferenceScreen>
