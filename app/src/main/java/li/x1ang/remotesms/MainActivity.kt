@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity() {
                  当用户触摸输入框以外部分市，隐藏软键盘
                  */
                 hideKeyboard()
+                currentFocus.clearFocus()
             }
         }
     }
