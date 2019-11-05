@@ -11,6 +11,9 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.TextView
 import li.x1ang.remotesms.service.SMSService
+import android.view.View
+import li.x1ang.remotesms.utils.hideKeyboard
+
 
 private const val REQUEST_CODE_ASK_PERMISSIONS = 123
 
@@ -50,6 +53,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        val contentView = findViewById<View>(R.id.content)
+        contentView.setOnClickListener {
+            if (currentFocus != null) {
+                /*
+                 hide keyboard if tap outside of text inputs
+                 当用户触摸输入框以外部分市，隐藏软键盘
+                 */
+                hideKeyboard()
+            }
+        }
     }
 
     @SuppressLint("SetTextI18n")
