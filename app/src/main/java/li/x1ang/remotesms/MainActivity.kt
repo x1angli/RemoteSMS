@@ -21,6 +21,11 @@ import li.x1ang.remotesms.utils.hideKeyboard
 private const val REQUEST_CODE_ASK_PERMISSIONS = 123
 
 class MainActivity : AppCompatActivity() {
+
+    companion object {
+        val SERVICE_STARTED = "service_started"
+    }
+
     lateinit var tvInfo: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +39,11 @@ class MainActivity : AppCompatActivity() {
         val serverUpdate = findViewById<Button>(R.id.button_update)
         val inputPhone = findViewById<TextInputEditText>(R.id.input_phone)
         val inputContent = findViewById<TextInputEditText>(R.id.input_content)
+
+        if (intent.hasExtra(SERVICE_STARTED)) {
+            SMSService.isRunning = true;
+            serverButton.text = getString(R.string.server_stop);
+        }
 
         serverUpdate.setOnClickListener {
             App.inputPhone = inputPhone.text.toString()
@@ -68,6 +78,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
