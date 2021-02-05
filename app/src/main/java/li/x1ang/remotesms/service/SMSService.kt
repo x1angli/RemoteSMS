@@ -16,9 +16,12 @@ class SMSService : Service() {
     private val smsReceiver by lazy {
         SMSReceiver(applicationContext)
     }
+
     companion object {
         const val ACTION_SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED"
         var isRunning = false
+        val notificationId = 0x1234
+        val channelId = "1"
     }
 
     override fun onBind(p0: Intent): IBinder? {
@@ -34,7 +37,8 @@ class SMSService : Service() {
 
         isRunning = true
         Log.i("SMSService", "onCreate")
-        notify(this)
+
+        startForeground(notificationId,  notify(this))
     }
 
     override fun onDestroy() {
@@ -47,6 +51,7 @@ class SMSService : Service() {
         sendBroadcast(intent)
         Log.i("SMSService", "onDestroy")
         notify(this)
+        stopForeground(true)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
