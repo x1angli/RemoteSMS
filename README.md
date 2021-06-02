@@ -10,3 +10,12 @@ First, you MUST edit the `app/src/main/assets/config.yaml` file before compiling
       ...
       endpoint: https://oapi.dingtalk.com/robot/send?access_token=YOUR_TOKEN
     ```
+
+## Tips and TroubleShooting
+### Instruction for XiaoMi/MIUI users 
+If you are using Xiaomi, there is a dedicated permission "access notification SMS" in addition to the regular "access SMS". Plus, it defaults to "disabled" 
+![image](https://user-images.githubusercontent.com/8603485/120455102-0b465900-c3c7-11eb-9d39-ae30f0f01c8d.png)
+
+Therefore, if you are unable to access the 6-digit Verification Code, just check the permission for this App, and make sure it's turned on
+
+Read more https://www.zhangshengrong.com/p/v710PWml1M/
