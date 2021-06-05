@@ -19,7 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" android:screenOrientation="portrait">
+        <activity android:name=".MainActivity" android:screenOrientation="unspecified">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SMSPreferenceActivity" android:screenOrientation="portrait" android:label="@string/preferences"/>
+        <activity android:name=".SMSPreferenceActivity" android:screenOrientation="unspecified" android:label="@string/preferences"/>
 
         <receiver android:name="li.x1ang.remotesms.receiver.BootReceiver">
             <intent-filter>

@@ -50,7 +50,7 @@ class SmsHelper(context: Context) {
 
     fun getPreferredNumberBySlotId(slotid: String): String {
         val preferredNumber = sharedPreferences.getString("sim${slotid}num", "")
-        return preferredNumber
+        return preferredNumber!!
     }
 
     fun getPhoneNumBySlotId(slotid: String): String {

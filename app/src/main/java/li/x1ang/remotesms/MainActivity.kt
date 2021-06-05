@@ -41,8 +41,8 @@ class MainActivity : AppCompatActivity() {
         val inputContent = findViewById<TextInputEditText>(R.id.input_content)
 
         if (intent.hasExtra(SERVICE_STARTED)) {
-            SMSService.isRunning = true;
-            serverButton.text = getString(R.string.server_stop);
+            SMSService.isRunning = true
+            serverButton.text = getString(R.string.server_stop)
         }
 
         serverUpdate.setOnClickListener {
@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
                  当用户触摸输入框以外部分市，隐藏软键盘
                  */
                 hideKeyboard()
-                currentFocus.clearFocus()
+                it.clearFocus()
             }
         }
     }
@@ -95,8 +95,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if(item != null && item!!.itemId == R.id.ctx_settings){
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item!!.itemId == R.id.ctx_settings){
             //show remotesms settings
             startActivity(Intent(this, SMSPreferenceActivity::class.java))
         }
