@@ -34,7 +34,7 @@ class SMSReceiver(context: Context) : BroadcastReceiver() {
                 PackageManager.PERMISSION_GRANTED) {
             val manager = context.getSystemService(SubscriptionManager::class.java)
 
-            val slotIdx = bundle.getInt("slot")
+            val slotIdx = bundle.getInt("slot_id")
 
             val preferredNumber = smsHelper.getPreferredNumberBySlotId("${slotIdx}")
             if(!TextUtils.isEmpty(preferredNumber))return preferredNumber
