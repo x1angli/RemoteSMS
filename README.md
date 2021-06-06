@@ -19,3 +19,5 @@ If you are using Xiaomi, there is a dedicated permission "access notification SM
 Therefore, if you are unable to access the 6-digit Verification Code, just check the permission for this App, and make sure it's turned on
 
 Read more https://www.zhangshengrong.com/p/v710PWml1M/
+
+Additionally, some regular SMS will be mis-categorized as "promo msgs （推广短信）"， so you might need to turn on the "Notification for promo msgs （推广短信通知）" option
