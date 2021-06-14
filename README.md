@@ -21,3 +21,12 @@ Therefore, if you are unable to access the 6-digit Verification Code, just check
 Read more https://www.zhangshengrong.com/p/v710PWml1M/
 
 Additionally, some regular SMS will be mis-categorized as "promo msgs （推广短信）"， so you might need to turn on the "Notification for promo msgs （推广短信通知）" option
+
+
+## Alternatives
+
+There are alternatives available. e.g.
+
+#### Incoming SMS to URL forwarder
+* Intro: https://bogomolov.tech/android-sms-forwarding/
+* Github Repo: https://github.com/bogkonstantin/android_income_sms_gateway_webhook
