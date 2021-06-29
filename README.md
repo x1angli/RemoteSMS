@@ -27,6 +27,10 @@ Additionally, some regular SMS will be mis-categorized as "promo msgs （推广�
 
 There are alternatives available. e.g.
 
-#### Incoming SMS to URL forwarder
+#### bogomolov
 * Intro: https://bogomolov.tech/android-sms-forwarding/
 * Github Repo: https://github.com/bogkonstantin/android_income_sms_gateway_webhook
+
+#### ppscn
+* Github Repo: https://github.com/pppscn/SmsForwarder
+
